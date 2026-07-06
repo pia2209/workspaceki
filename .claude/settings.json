@@ -1,4 +1,7 @@
 {
+  "env": {
+    "AWS_PROFILE": "borchers-kollegen"
+  },
   "hooks": {
     "SessionStart": [
       {
