@@ -9,7 +9,7 @@ const DB_PATH = path.join(DATA_DIR, "workspace.db");
 let db: DatabaseSync | null = null;
 
 const SCHEMA = `
-CREATE TABLE IF NOT EXISTS projects (
+CREATE TABLE IF NOT EXISTS mandates (
   id TEXT PRIMARY KEY,
   name TEXT NOT NULL,
   description TEXT NOT NULL DEFAULT '',
@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS projects (
 
 CREATE TABLE IF NOT EXISTS knowledge_items (
   id TEXT PRIMARY KEY,
-  project_id TEXT NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+  mandate_id TEXT NOT NULL REFERENCES mandates(id) ON DELETE CASCADE,
   type TEXT NOT NULL,
   title TEXT NOT NULL,
   content TEXT NOT NULL,
@@ -38,12 +38,12 @@ CREATE TABLE IF NOT EXISTS knowledge_items (
   created_at TEXT NOT NULL
 );
 
-CREATE INDEX IF NOT EXISTS idx_items_project ON knowledge_items(project_id);
+CREATE INDEX IF NOT EXISTS idx_items_mandate ON knowledge_items(mandate_id);
 CREATE INDEX IF NOT EXISTS idx_items_subject ON knowledge_items(subject_email);
 
 CREATE TABLE IF NOT EXISTS ai_generations (
   id TEXT PRIMARY KEY,
-  project_id TEXT NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+  mandate_id TEXT NOT NULL REFERENCES mandates(id) ON DELETE CASCADE,
   kind TEXT NOT NULL,
   input_item_ids TEXT NOT NULL DEFAULT '[]',
   task TEXT NOT NULL DEFAULT '',
@@ -53,7 +53,7 @@ CREATE TABLE IF NOT EXISTS ai_generations (
   created_at TEXT NOT NULL
 );
 
-CREATE INDEX IF NOT EXISTS idx_generations_project ON ai_generations(project_id);
+CREATE INDEX IF NOT EXISTS idx_generations_mandate ON ai_generations(mandate_id);
 
 CREATE TABLE IF NOT EXISTS audit_log (
   id TEXT PRIMARY KEY,

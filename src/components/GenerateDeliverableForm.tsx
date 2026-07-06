@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import type { AiGeneration } from "@/lib/types";
 
-export function GenerateDeliverableForm({ projectId, generations }: { projectId: string; generations: AiGeneration[] }) {
+export function GenerateDeliverableForm({ mandateId, generations }: { mandateId: string; generations: AiGeneration[] }) {
   const router = useRouter();
   const [instructions, setInstructions] = useState("");
   const [loading, setLoading] = useState(false);
@@ -17,7 +17,7 @@ export function GenerateDeliverableForm({ projectId, generations }: { projectId:
     setError(null);
     setResult(null);
     try {
-      const res = await fetch(`/api/projects/${projectId}/deliverable`, {
+      const res = await fetch(`/api/mandates/${mandateId}/deliverable`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ instructions }),
@@ -42,7 +42,7 @@ export function GenerateDeliverableForm({ projectId, generations }: { projectId:
           required
           value={instructions}
           onChange={(e) => setInstructions(e.target.value)}
-          placeholder="z.B. Erstelle ein Entscheidungsmemo für das Steering Committee zur Frage, ob wir den DACH-Rollout im Q3 starten sollten."
+          placeholder="z.B. Erstelle ein Entscheidungsmemo für den Partner zur Frage, ob wir dem Mandanten einen Vergleich empfehlen sollten."
           rows={3}
           className="w-full rounded-md border border-slate-300 px-3 py-1.5 text-sm"
         />
@@ -52,7 +52,7 @@ export function GenerateDeliverableForm({ projectId, generations }: { projectId:
           disabled={loading}
           className="rounded-md bg-slate-900 px-3 py-1.5 text-sm font-medium text-white hover:bg-slate-700 disabled:opacity-50"
         >
-          {loading ? "Erstelle Deliverable…" : "Aus Projektwissen generieren"}
+          {loading ? "Erstelle Deliverable…" : "Aus Mandatswissen generieren"}
         </button>
       </form>
 

@@ -1,4 +1,4 @@
-import { createProject, createItem } from "../src/lib/repo";
+import { createMandate, createItem } from "../src/lib/repo";
 
 function daysAgo(n: number): string {
   const d = new Date();
@@ -7,87 +7,110 @@ function daysAgo(n: number): string {
 }
 
 function seed() {
-  const p1 = createProject({
-    name: "Markteintritt DACH 2026",
-    description: "Vorbereitung des Produktlaunches in Deutschland, Österreich und der Schweiz.",
-    owner: "Team Growth",
+  const m1 = createMandate({
+    name: "M&A-Transaktion Nordwind Industrie GmbH",
+    description: "Beratung des Käufers beim Erwerb der Nordwind Industrie GmbH (Signing voraussichtlich Q3).",
+    owner: "P. Adibelli, Partner",
   });
 
   createItem({
-    project_id: p1.id,
+    mandate_id: m1.id,
     type: "research",
-    title: "Wettbewerbsanalyse DACH-Markt",
+    title: "Due-Diligence-Kurzanalyse Zielgesellschaft",
     content:
-      "Die drei größten Wettbewerber (AlpenSoft, NordCloud, MeridianTech) adressieren primär Enterprise-Kunden. Preislücke im Mittelstand-Segment (50-250 Mitarbeitende) erkennbar. Lokalisierung und DSGVO-Konformität werden von Einkaufsabteilungen als Top-3-Kriterium genannt.",
+      "Legal-Due-Diligence zeigt zwei wesentliche Change-of-Control-Klauseln in Kernlieferverträgen sowie ein laufendes, nicht wesentliches Kartellverfahren gegen einen Wettbewerber der Zielgesellschaft (keine unmittelbare Betroffenheit). Empfehlung: Zustimmungsvorbehalte der betroffenen Vertragspartner vor Signing einholen.",
     author: "Julia Weber",
-    source: "Interne Marktstudie Q1 2026",
+    source: "Due-Diligence-Bericht Entwurf",
     occurred_at: daysAgo(40),
   });
 
   createItem({
-    project_id: p1.id,
+    mandate_id: m1.id,
     type: "meeting",
-    title: "Kickoff mit Vertriebsleitung",
+    title: "Kickoff mit Geschäftsführung der Zielgesellschaft",
     content:
-      "Vertrieb erwartet Pricing-Vorschlag bis Ende Monat. Wunsch nach gestaffeltem Modell (Starter/Pro/Enterprise). Rechtsabteilung weist auf notwendige AVV-Vorlage für neue Kunden hin, bevor der erste Vertrag unterschrieben werden kann.",
+      "Geschäftsführung erwartet ersten SPA-Entwurf bis Ende Monat. Wunsch nach gestaffeltem Kaufpreis (Closing + Earn-out über 2 Jahre). Datenschutzbeauftragter der Zielgesellschaft weist auf notwendigen AVV mit dem Datenraum-Anbieter hin, bevor weitere Unterlagen hochgeladen werden.",
     author: "Markus Lindner",
     source: "Meeting-Protokoll, Konferenzraum 3",
     occurred_at: daysAgo(35),
   });
 
   createItem({
-    project_id: p1.id,
+    mandate_id: m1.id,
     type: "stakeholder_signal",
-    title: "Feedback von Pilotkunde Borchers & Kollegen",
+    title: "Rückfrage der Gegenseite zu Signing-Termin",
     content:
-      "Ansprechpartner P. Adibelli (p.adibelli@borchers-kollegen.de) äußert Interesse an einer Pilotphase, benötigt aber Klarheit zur Datenverarbeitung außerhalb der EU, bevor ein Vertrag unterzeichnet werden kann. Wunsch nach EU-Hosting-Option.",
-    author: "Key Account Management",
-    subject_email: "p.adibelli@borchers-kollegen.de",
+      "Gegnerischer Anwalt K. Nordmann (k.nordmann@gegenseite-legal.de) fragt an, ob Signing auf die letzte Augustwoche vorgezogen werden kann, da die Zielgesellschaft ihr Geschäftsjahr zum 31.8. abschließt. Bittet um Rückmeldung bis Ende der Woche.",
+    author: "Kanzlei Gegenseite",
+    subject_email: "k.nordmann@gegenseite-legal.de",
     source: "E-Mail-Austausch",
     occurred_at: daysAgo(20),
     legal_basis: "legitimate_interest",
   });
 
   createItem({
-    project_id: p1.id,
+    mandate_id: m1.id,
     type: "deliverable",
-    title: "Business Case v1 (Entwurf)",
+    title: "Entwurf Unternehmenskaufvertrag (SPA) v1",
     content:
-      "Erwarteter Umsatz Jahr 1: 480.000 EUR bei 25 Neukunden im Mittelstandssegment. Break-even nach 14 Monaten unter Annahme einer Churn-Rate von 6% p.a. Investitionsbedarf Vertrieb & Marketing: 180.000 EUR.",
-    author: "Finance",
-    source: "Interne Kalkulation",
+      "Kaufpreis: 12,4 Mio. EUR Basiskaufpreis zzgl. Earn-out bis 2,0 Mio. EUR über 2 Jahre bei Erreichen definierter EBITDA-Ziele. Closing-Bedingungen: Zustimmung Kartellbehörde nicht erforderlich (unterhalb Aufgreifschwellen), Zustimmung zweier Kernlieferanten erforderlich (Change-of-Control).",
+    author: "Team M&A",
+    source: "Interner Entwurf",
     occurred_at: daysAgo(15),
   });
 
-  const p2 = createProject({
-    name: "Interne Prozessdigitalisierung",
-    description: "Digitalisierung der Angebots- und Rechnungsprozesse.",
-    owner: "Team Operations",
+  const m2 = createMandate({
+    name: "Kündigungsschutzprozess Krammer ./. Elbtal Logistik GmbH",
+    description: "Vertretung der Elbtal Logistik GmbH in einem Kündigungsschutzverfahren vor dem Arbeitsgericht.",
+    owner: "Dr. Julia Weber, Partnerin",
   });
 
   createItem({
-    project_id: p2.id,
+    mandate_id: m2.id,
     type: "research",
-    title: "Ist-Stand-Analyse Angebotsprozess",
+    title: "Rechtsprechungsübersicht zu betriebsbedingten Kündigungen (BAG)",
     content:
-      "Aktuell durchschnittlich 4,5 Tage von Anfrage bis Angebotsversand, davon 2 Tage manuelle Freigabe. Größter Engpass: fehlende Vorlagen-Automatisierung und manuelle Preiskalkulation in Excel.",
-    author: "Prozessmanagement",
-    source: "Interviews mit 8 Mitarbeitenden",
+      "Aktuelle BAG-Rechtsprechung verlangt bei betriebsbedingten Kündigungen eine nachvollziehbare unternehmerische Entscheidung sowie eine ordnungsgemäße Sozialauswahl nach § 1 Abs. 3 KSchG. Schwachstelle im vorliegenden Fall: Sozialauswahl wurde nur innerhalb einer Abteilung, nicht betriebsweit durchgeführt.",
+    author: "Referendarin",
+    source: "Rechtsprechungsdatenbank",
     occurred_at: daysAgo(28),
   });
 
   createItem({
-    project_id: p2.id,
+    mandate_id: m2.id,
     type: "meeting",
-    title: "Abstimmung mit IT zu Tool-Auswahl",
+    title: "Abstimmung mit Mandant zur Prozessstrategie",
     content:
-      "IT favorisiert Erweiterung des bestehenden CRM-Systems statt Einführung eines neuen Tools, um Integrationsaufwand zu reduzieren. Datenschutz-Beauftragter muss vor Go-Live eine Datenschutz-Folgenabschätzung durchführen, da automatisierte Preisentscheidungen betroffen sein könnten.",
-    author: "IT-Leitung",
+      "Mandant favorisiert Vergleich vor dem Gütetermin, um Prozessrisiko wegen der lückenhaften Sozialauswahl zu vermeiden. Budgetrahmen für Abfindungsvergleich: bis zu 1,5 Bruttomonatsgehälter pro Beschäftigungsjahr.",
+    author: "Personalleitung Elbtal Logistik",
     source: "Meeting-Notizen",
-    occurred_at: daysAgo(10),
+    occurred_at: daysAgo(18),
   });
 
-  console.log(`Seed abgeschlossen: Projekte ${p1.id}, ${p2.id}`);
+  createItem({
+    mandate_id: m2.id,
+    type: "stakeholder_signal",
+    title: "Ladung zum Gütetermin durch das Arbeitsgericht",
+    content:
+      "Arbeitsgericht Hamburg lädt beide Parteien zum Gütetermin am [Termin siehe Ladung]. Klägervertreterin kündigt an, in der mündlichen Verhandlung zusätzlich einen Auflösungsantrag der Gegenseite zu thematisieren, sollte kein Vergleich zustande kommen.",
+    author: "Arbeitsgericht Hamburg",
+    source: "Gerichtliche Ladung",
+    occurred_at: daysAgo(8),
+    legal_basis: "legal_obligation",
+  });
+
+  createItem({
+    mandate_id: m2.id,
+    type: "deliverable",
+    title: "Klageerwiderung (Entwurf)",
+    content:
+      "Entwurf verteidigt die Sozialauswahl unter Verweis auf Herausnahme von Leistungsträgern (§ 1 Abs. 3 Satz 2 KSchG) und schlägt hilfsweise einen Abfindungsvergleich in Höhe von 1,2 Bruttomonatsgehältern pro Beschäftigungsjahr vor.",
+    author: "Team Arbeitsrecht",
+    source: "Interner Entwurf",
+    occurred_at: daysAgo(5),
+  });
+
+  console.log(`Seed abgeschlossen: Mandate ${m1.id}, ${m2.id}`);
 }
 
 seed();

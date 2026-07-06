@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-export function NewProjectForm() {
+export function NewMandateForm() {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [name, setName] = useState("");
@@ -17,18 +17,18 @@ export function NewProjectForm() {
     setSubmitting(true);
     setError(null);
     try {
-      const res = await fetch("/api/projects", {
+      const res = await fetch("/api/mandates", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, description, owner }),
       });
       if (!res.ok) throw new Error((await res.json()).error ?? "Fehler beim Erstellen");
-      const { project } = await res.json();
+      const { mandate } = await res.json();
       setOpen(false);
       setName("");
       setDescription("");
       setOwner("");
-      router.push(`/projects/${project.id}`);
+      router.push(`/mandates/${mandate.id}`);
       router.refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Unbekannter Fehler");
@@ -43,7 +43,7 @@ export function NewProjectForm() {
         onClick={() => setOpen(true)}
         className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-700"
       >
-        + Neues Projekt
+        + Neues Mandat
       </button>
     );
   }
@@ -51,13 +51,13 @@ export function NewProjectForm() {
   return (
     <form onSubmit={submit} className="w-full max-w-md space-y-3 rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
       <div>
-        <label className="block text-xs font-medium text-slate-600">Projektname</label>
+        <label className="block text-xs font-medium text-slate-600">Mandatsbezeichnung</label>
         <input
           required
           value={name}
           onChange={(e) => setName(e.target.value)}
           className="mt-1 w-full rounded-md border border-slate-300 px-3 py-1.5 text-sm"
-          placeholder="z.B. Markteintritt DACH 2026"
+          placeholder="z.B. M&A-Transaktion Nordwind Industrie GmbH"
         />
       </div>
       <div>
@@ -70,12 +70,12 @@ export function NewProjectForm() {
         />
       </div>
       <div>
-        <label className="block text-xs font-medium text-slate-600">Verantwortlich</label>
+        <label className="block text-xs font-medium text-slate-600">Verantwortlicher Partner</label>
         <input
           value={owner}
           onChange={(e) => setOwner(e.target.value)}
           className="mt-1 w-full rounded-md border border-slate-300 px-3 py-1.5 text-sm"
-          placeholder="Name oder Team"
+          placeholder="Name des Partners / Teams"
         />
       </div>
       {error && <p className="text-xs text-red-600">{error}</p>}

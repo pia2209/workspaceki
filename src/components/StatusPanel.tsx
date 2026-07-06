@@ -2,10 +2,10 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import type { KnowledgeItem, Project } from "@/lib/types";
+import type { KnowledgeItem, Mandate } from "@/lib/types";
 import { HealthBadge, ItemTypeBadge } from "@/components/StatusBadge";
 
-export function StatusPanel({ project, items }: { project: Project; items: KnowledgeItem[] }) {
+export function StatusPanel({ mandate, items }: { mandate: Mandate; items: KnowledgeItem[] }) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -14,7 +14,7 @@ export function StatusPanel({ project, items }: { project: Project; items: Knowl
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch(`/api/projects/${project.id}/status`, { method: "POST" });
+      const res = await fetch(`/api/mandates/${mandate.id}/status`, { method: "POST" });
       if (!res.ok) throw new Error((await res.json()).error ?? "Fehler bei der Status-Analyse");
       router.refresh();
     } catch (err) {
@@ -31,10 +31,10 @@ export function StatusPanel({ project, items }: { project: Project; items: Knowl
       <div className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
         <div className="flex items-center justify-between gap-3">
           <div className="flex items-center gap-3">
-            <HealthBadge health={project.ai_health} />
-            {project.ai_summary_generated_at && (
+            <HealthBadge health={mandate.ai_health} />
+            {mandate.ai_summary_generated_at && (
               <span className="text-xs text-slate-400">
-                Analyse vom {new Date(project.ai_summary_generated_at).toLocaleString("de-DE")}
+                Analyse vom {new Date(mandate.ai_summary_generated_at).toLocaleString("de-DE")}
               </span>
             )}
           </div>
@@ -48,7 +48,7 @@ export function StatusPanel({ project, items }: { project: Project; items: Knowl
         </div>
         {error && <p className="mt-2 text-xs text-red-600">{error}</p>}
         <p className="mt-3 whitespace-pre-wrap text-sm text-slate-700">
-          {project.ai_summary ?? "Noch keine KI-Statusanalyse erstellt. Klicke oben auf „KI-Status aktualisieren“, sobald Projektwissen vorhanden ist."}
+          {mandate.ai_summary ?? "Noch keine KI-Statusanalyse erstellt. Klicke oben auf „KI-Status aktualisieren“, sobald Mandatswissen vorhanden ist."}
         </p>
       </div>
 

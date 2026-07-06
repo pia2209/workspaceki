@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { createItem, getProject, listItems } from "@/lib/repo";
+import { createItem, getMandate, listItems } from "@/lib/repo";
 import type { ItemType } from "@/lib/types";
 
 const VALID_TYPES: ItemType[] = ["research", "meeting", "deliverable", "stakeholder_signal"];
@@ -11,8 +11,8 @@ export async function GET(_request: Request, { params }: { params: Promise<{ id:
 
 export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const project = getProject(id);
-  if (!project) return NextResponse.json({ error: "project not found" }, { status: 404 });
+  const mandate = getMandate(id);
+  if (!mandate) return NextResponse.json({ error: "mandate not found" }, { status: 404 });
 
   const body = await request.json();
   if (!body.title || !body.content || !VALID_TYPES.includes(body.type)) {
@@ -20,7 +20,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
   }
 
   const item = createItem({
-    project_id: id,
+    mandate_id: id,
     type: body.type,
     title: body.title,
     content: body.content,

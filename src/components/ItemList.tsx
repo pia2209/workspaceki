@@ -12,7 +12,7 @@ export function ItemList({ items }: { items: KnowledgeItem[] }) {
     if (!confirm(`"${item.title}" wirklich löschen?`)) return;
     setDeleting(item.id);
     try {
-      await fetch(`/api/projects/${item.project_id}/items/${item.id}`, { method: "DELETE" });
+      await fetch(`/api/mandates/${item.mandate_id}/items/${item.id}`, { method: "DELETE" });
       router.refresh();
     } finally {
       setDeleting(null);

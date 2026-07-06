@@ -171,7 +171,7 @@ export function PrivacyCenter({
         <div className="flex items-center justify-between">
           <div>
             <h2 className="text-lg font-semibold">Speicherbegrenzung</h2>
-            <p className="mt-1 text-sm text-slate-500">Löscht Projektwissen-Einträge, deren Aufbewahrungsfrist abgelaufen ist (Art. 5 Abs. 1 lit. e).</p>
+            <p className="mt-1 text-sm text-slate-500">Löscht Mandatswissen-Einträge, deren Aufbewahrungsfrist abgelaufen ist (Art. 5 Abs. 1 lit. e).</p>
           </div>
           <button
             onClick={runRetentionSweep}

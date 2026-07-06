@@ -1,12 +1,12 @@
 import { NextResponse } from "next/server";
 import { buildKnowledgeBaseBlock, generateDeliverable, currentModel } from "@/lib/ai";
 import { describeAiError } from "@/lib/ai-error";
-import { getProject, listItems, saveGeneration } from "@/lib/repo";
+import { getMandate, listItems, saveGeneration } from "@/lib/repo";
 
 export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const project = getProject(id);
-  if (!project) return NextResponse.json({ error: "project not found" }, { status: 404 });
+  const mandate = getMandate(id);
+  if (!mandate) return NextResponse.json({ error: "mandate not found" }, { status: 404 });
 
   const body = await request.json();
   if (!body.instructions || typeof body.instructions !== "string") {
@@ -18,7 +18,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
     const kb = buildKnowledgeBaseBlock(items);
     const output = await generateDeliverable(kb, body.instructions);
     const generation = saveGeneration({
-      project_id: id,
+      mandate_id: id,
       kind: "deliverable",
       input_item_ids: kb.itemIds,
       task: body.instructions,

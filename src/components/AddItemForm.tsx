@@ -5,13 +5,13 @@ import { useState } from "react";
 import type { ItemType } from "@/lib/types";
 
 const PLACEHOLDERS: Record<ItemType, { title: string; content: string }> = {
-  research: { title: "z.B. Wettbewerbsanalyse DACH-Markt", content: "Research-Notizen, Zusammenfassung, Links, Kernaussagen…" },
-  meeting: { title: "z.B. Kickoff mit Stakeholdern", content: "Meeting-Notizen oder Transkript einfügen…" },
-  deliverable: { title: "z.B. Business Case v1", content: "Inhalt des früheren Arbeitsergebnisses…" },
-  stakeholder_signal: { title: "z.B. Feedback von Kunde X", content: "Feedback, Anfrage oder Signal eines Stakeholders…" },
+  research: { title: "z.B. Rechtsprechungsübersicht zu §626 BGB", content: "Research-Notizen, Zusammenfassung, Fundstellen, Kernaussagen…" },
+  meeting: { title: "z.B. Mandantengespräch Erstberatung", content: "Meeting-Notizen oder Transkript einfügen…" },
+  deliverable: { title: "z.B. Gutachten Entwurf v1", content: "Inhalt des früheren Arbeitsergebnisses…" },
+  stakeholder_signal: { title: "z.B. Nachricht der Gegenseite", content: "Feedback, Anfrage oder Signal von Mandant, Gegenseite oder Gericht…" },
 };
 
-export function AddItemForm({ projectId, type, onAdded }: { projectId: string; type: ItemType; onAdded?: () => void }) {
+export function AddItemForm({ mandateId, type, onAdded }: { mandateId: string; type: ItemType; onAdded?: () => void }) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [title, setTitle] = useState("");
@@ -28,7 +28,7 @@ export function AddItemForm({ projectId, type, onAdded }: { projectId: string; t
     setSubmitting(true);
     setError(null);
     try {
-      const res = await fetch(`/api/projects/${projectId}/items`, {
+      const res = await fetch(`/api/mandates/${mandateId}/items`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

@@ -1,14 +1,14 @@
-export type ProjectStatus = "active" | "on_hold" | "completed" | "archived";
+export type MandateStatus = "active" | "on_hold" | "completed" | "archived";
 export type AiHealth = "on_track" | "at_risk" | "blocked" | null;
 export type ItemType = "research" | "meeting" | "deliverable" | "stakeholder_signal";
 export type LegalBasis = "consent" | "contract" | "legitimate_interest" | "legal_obligation";
 
-export interface Project {
+export interface Mandate {
   id: string;
   name: string;
   description: string;
   owner: string;
-  status: ProjectStatus;
+  status: MandateStatus;
   ai_health: AiHealth;
   ai_summary: string | null;
   ai_summary_generated_at: string | null;
@@ -18,7 +18,7 @@ export interface Project {
 
 export interface KnowledgeItem {
   id: string;
-  project_id: string;
+  mandate_id: string;
   type: ItemType;
   title: string;
   content: string;
@@ -34,7 +34,7 @@ export interface KnowledgeItem {
 
 export interface AiGeneration {
   id: string;
-  project_id: string;
+  mandate_id: string;
   kind: "status_summary" | "deliverable" | "qa";
   input_item_ids: string;
   task: string;

@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
-import { createProject, listProjects } from "@/lib/repo";
+import { createMandate, listMandates } from "@/lib/repo";
 
 export async function GET() {
-  return NextResponse.json({ projects: listProjects() });
+  return NextResponse.json({ mandates: listMandates() });
 }
 
 export async function POST(request: Request) {
@@ -10,11 +10,11 @@ export async function POST(request: Request) {
   if (!body.name || typeof body.name !== "string") {
     return NextResponse.json({ error: "name is required" }, { status: 400 });
   }
-  const project = createProject({
+  const mandate = createMandate({
     name: body.name,
     description: body.description ?? "",
     owner: body.owner ?? "",
     status: body.status,
   });
-  return NextResponse.json({ project }, { status: 201 });
+  return NextResponse.json({ mandate }, { status: 201 });
 }

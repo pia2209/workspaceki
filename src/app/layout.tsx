@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Adaptive Workspace",
-  description: "KI-gestützter Workspace für Research, Meetings, Deliverables und Stakeholder-Signale",
+  title: "Adaptive Workspace für Kanzleien",
+  description: "KI-gestützter Workspace für Kanzleien: Research, Meetings, Deliverables und Stakeholder-Signale je Mandat",
 };
 
 export default function RootLayout({
@@ -34,7 +34,7 @@ export default function RootLayout({
             </Link>
             <nav className="flex gap-6 text-sm font-medium text-slate-600">
               <Link href="/" className="hover:text-slate-900">
-                Projekte
+                Mandate
               </Link>
               <Link href="/privacy" className="hover:text-slate-900">
                 Privacy Center

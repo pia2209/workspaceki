@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import type { AiGeneration } from "@/lib/types";
 
-export function AskAiForm({ projectId, generations }: { projectId: string; generations: AiGeneration[] }) {
+export function AskAiForm({ mandateId, generations }: { mandateId: string; generations: AiGeneration[] }) {
   const router = useRouter();
   const [question, setQuestion] = useState("");
   const [loading, setLoading] = useState(false);
@@ -17,7 +17,7 @@ export function AskAiForm({ projectId, generations }: { projectId: string; gener
     setError(null);
     setAnswer(null);
     try {
-      const res = await fetch(`/api/projects/${projectId}/ask`, {
+      const res = await fetch(`/api/mandates/${mandateId}/ask`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ question }),
@@ -37,12 +37,12 @@ export function AskAiForm({ projectId, generations }: { projectId: string; gener
   return (
     <div className="space-y-6">
       <form onSubmit={submit} className="space-y-3 rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
-        <label className="block text-sm font-medium text-slate-700">Frage an das Projektwissen stellen</label>
+        <label className="block text-sm font-medium text-slate-700">Frage an das Mandatswissen stellen</label>
         <textarea
           required
           value={question}
           onChange={(e) => setQuestion(e.target.value)}
-          placeholder="z.B. Was hat der Kunde beim letzten Meeting zur Preisstruktur gesagt?"
+          placeholder="z.B. Welche Frist wurde beim letzten Mandantengespräch zur Klageerwiderung genannt?"
           rows={2}
           className="w-full rounded-md border border-slate-300 px-3 py-1.5 text-sm"
         />

@@ -1,47 +1,47 @@
 import Link from "next/link";
-import { listProjects } from "@/lib/repo";
-import { HealthBadge, ProjectStatusBadge } from "@/components/StatusBadge";
-import { NewProjectForm } from "@/components/NewProjectForm";
+import { listMandates } from "@/lib/repo";
+import { HealthBadge, MandateStatusBadge } from "@/components/StatusBadge";
+import { NewMandateForm } from "@/components/NewMandateForm";
 
 export const dynamic = "force-dynamic";
 
 export default function Home() {
-  const projects = listProjects();
+  const mandates = listMandates();
 
   return (
     <div className="mx-auto max-w-6xl px-6 py-10">
       <div className="mb-8 flex items-start justify-between gap-6">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Projekte</h1>
+          <h1 className="text-2xl font-semibold tracking-tight">Mandate</h1>
           <p className="mt-1 text-sm text-slate-500">
-            Aktueller Stand aller Projekte auf einen Blick — Research, Meetings, Deliverables und Stakeholder-Signale laufen hier zusammen.
+            Aktueller Stand aller Mandate auf einen Blick — Research, Meetings, Deliverables und Stakeholder-Signale laufen hier zusammen, damit Partner jederzeit entscheidungsreif sind.
           </p>
         </div>
-        <NewProjectForm />
+        <NewMandateForm />
       </div>
 
-      {projects.length === 0 ? (
+      {mandates.length === 0 ? (
         <div className="rounded-lg border border-dashed border-slate-300 bg-white p-10 text-center text-sm text-slate-500">
-          Noch keine Projekte angelegt. Lege oben ein Projekt an, oder führe <code className="rounded bg-slate-100 px-1 py-0.5">npm run seed</code> aus, um mit Beispieldaten zu starten.
+          Noch keine Mandate angelegt. Lege oben ein Mandat an, oder führe <code className="rounded bg-slate-100 px-1 py-0.5">npm run seed</code> aus, um mit Beispieldaten zu starten.
         </div>
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {projects.map((project) => (
+          {mandates.map((mandate) => (
             <Link
-              key={project.id}
-              href={`/projects/${project.id}`}
+              key={mandate.id}
+              href={`/mandates/${mandate.id}`}
               className="flex flex-col gap-3 rounded-lg border border-slate-200 bg-white p-5 shadow-sm transition hover:border-slate-300 hover:shadow-md"
             >
               <div className="flex items-center justify-between gap-2">
-                <h2 className="font-medium leading-tight">{project.name}</h2>
-                <ProjectStatusBadge status={project.status} />
+                <h2 className="font-medium leading-tight">{mandate.name}</h2>
+                <MandateStatusBadge status={mandate.status} />
               </div>
-              {project.description && <p className="line-clamp-2 text-sm text-slate-500">{project.description}</p>}
+              {mandate.description && <p className="line-clamp-2 text-sm text-slate-500">{mandate.description}</p>}
               <div className="mt-auto flex items-center justify-between pt-2">
-                <HealthBadge health={project.ai_health} />
-                {project.owner && <span className="text-xs text-slate-400">{project.owner}</span>}
+                <HealthBadge health={mandate.ai_health} />
+                {mandate.owner && <span className="text-xs text-slate-400">{mandate.owner}</span>}
               </div>
-              {project.ai_summary && <p className="line-clamp-3 text-xs text-slate-500">{project.ai_summary}</p>}
+              {mandate.ai_summary && <p className="line-clamp-3 text-xs text-slate-500">{mandate.ai_summary}</p>}
             </Link>
           ))}
         </div>

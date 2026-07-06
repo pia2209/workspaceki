@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import type { AiGeneration, KnowledgeItem, Project } from "@/lib/types";
-import { ProjectStatusBadge } from "@/components/StatusBadge";
+import type { AiGeneration, KnowledgeItem, Mandate } from "@/lib/types";
+import { MandateStatusBadge } from "@/components/StatusBadge";
 import { StatusPanel } from "@/components/StatusPanel";
 import { AddItemForm } from "@/components/AddItemForm";
 import { ItemList } from "@/components/ItemList";
@@ -20,13 +20,13 @@ const TABS = [
 
 type TabKey = (typeof TABS)[number]["key"];
 
-export function ProjectHub({
-  project,
+export function MandateHub({
+  mandate,
   items,
   deliverableGenerations,
   qaGenerations,
 }: {
-  project: Project;
+  mandate: Mandate;
   items: KnowledgeItem[];
   deliverableGenerations: AiGeneration[];
   qaGenerations: AiGeneration[];
@@ -39,11 +39,11 @@ export function ProjectHub({
     <div className="mx-auto max-w-5xl px-6 py-10">
       <div className="mb-6">
         <div className="flex items-center gap-3">
-          <h1 className="text-2xl font-semibold tracking-tight">{project.name}</h1>
-          <ProjectStatusBadge status={project.status} />
+          <h1 className="text-2xl font-semibold tracking-tight">{mandate.name}</h1>
+          <MandateStatusBadge status={mandate.status} />
         </div>
-        {project.description && <p className="mt-1 text-sm text-slate-500">{project.description}</p>}
-        {project.owner && <p className="mt-1 text-xs text-slate-400">Verantwortlich: {project.owner}</p>}
+        {mandate.description && <p className="mt-1 text-sm text-slate-500">{mandate.description}</p>}
+        {mandate.owner && <p className="mt-1 text-xs text-slate-400">Verantwortlicher Partner: {mandate.owner}</p>}
       </div>
 
       <div className="mb-6 flex flex-wrap gap-1 border-b border-slate-200">
@@ -60,28 +60,28 @@ export function ProjectHub({
         ))}
       </div>
 
-      {tab === "overview" && <StatusPanel project={project} items={items} />}
+      {tab === "overview" && <StatusPanel mandate={mandate} items={items} />}
 
       {tab === "research" && (
         <div className="space-y-4">
-          <AddItemForm projectId={project.id} type="research" />
+          <AddItemForm mandateId={mandate.id} type="research" />
           <ItemList items={byType("research")} />
         </div>
       )}
 
       {tab === "meeting" && (
         <div className="space-y-4">
-          <AddItemForm projectId={project.id} type="meeting" />
+          <AddItemForm mandateId={mandate.id} type="meeting" />
           <ItemList items={byType("meeting")} />
         </div>
       )}
 
       {tab === "deliverable" && (
         <div className="space-y-8">
-          <GenerateDeliverableForm projectId={project.id} generations={deliverableGenerations} />
+          <GenerateDeliverableForm mandateId={mandate.id} generations={deliverableGenerations} />
           <div>
             <h3 className="mb-3 text-sm font-semibold text-slate-700">Frühere Arbeitsergebnisse (Upload)</h3>
-            <AddItemForm projectId={project.id} type="deliverable" />
+            <AddItemForm mandateId={mandate.id} type="deliverable" />
             <div className="mt-3">
               <ItemList items={byType("deliverable")} />
             </div>
@@ -91,12 +91,12 @@ export function ProjectHub({
 
       {tab === "stakeholder_signal" && (
         <div className="space-y-4">
-          <AddItemForm projectId={project.id} type="stakeholder_signal" />
+          <AddItemForm mandateId={mandate.id} type="stakeholder_signal" />
           <ItemList items={byType("stakeholder_signal")} />
         </div>
       )}
 
-      {tab === "ask" && <AskAiForm projectId={project.id} generations={qaGenerations} />}
+      {tab === "ask" && <AskAiForm mandateId={mandate.id} generations={qaGenerations} />}
     </div>
   );
 }

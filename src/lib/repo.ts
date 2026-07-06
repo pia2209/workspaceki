@@ -1,62 +1,62 @@
 import { getDb, newId, nowIso, toPlain, toPlainArray } from "./db";
 import { logAudit } from "./privacy";
 import type {
-  Project,
+  Mandate,
   KnowledgeItem,
   AiGeneration,
   AuditLogEntry,
   DataSubjectRequest,
   ItemType,
   LegalBasis,
-  ProjectStatus,
+  MandateStatus,
 } from "./types";
 
-// --- Projects ---------------------------------------------------------
+// --- Mandates ---------------------------------------------------------
 
-export function listProjects(): Project[] {
+export function listMandates(): Mandate[] {
   const db = getDb();
-  return toPlainArray<Project>(db.prepare(`SELECT * FROM projects ORDER BY updated_at DESC`).all());
+  return toPlainArray<Mandate>(db.prepare(`SELECT * FROM mandates ORDER BY updated_at DESC`).all());
 }
 
-export function getProject(id: string): Project | undefined {
+export function getMandate(id: string): Mandate | undefined {
   const db = getDb();
-  return toPlain<Project | undefined>(db.prepare(`SELECT * FROM projects WHERE id = ?`).get(id));
+  return toPlain<Mandate | undefined>(db.prepare(`SELECT * FROM mandates WHERE id = ?`).get(id));
 }
 
-export function createProject(input: { name: string; description: string; owner: string; status?: ProjectStatus }): Project {
+export function createMandate(input: { name: string; description: string; owner: string; status?: MandateStatus }): Mandate {
   const db = getDb();
-  const id = newId("proj");
+  const id = newId("mand");
   const now = nowIso();
   db.prepare(
-    `INSERT INTO projects (id, name, description, owner, status, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?)`
+    `INSERT INTO mandates (id, name, description, owner, status, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?)`
   ).run(id, input.name, input.description, input.owner, input.status ?? "active", now, now);
-  logAudit("project.create", "project", id, { name: input.name });
-  return getProject(id)!;
+  logAudit("mandate.create", "mandate", id, { name: input.name });
+  return getMandate(id)!;
 }
 
-export function touchProject(id: string): void {
-  getDb().prepare(`UPDATE projects SET updated_at = ? WHERE id = ?`).run(nowIso(), id);
+export function touchMandate(id: string): void {
+  getDb().prepare(`UPDATE mandates SET updated_at = ? WHERE id = ?`).run(nowIso(), id);
 }
 
-export function saveProjectAiSummary(id: string, summary: string, health: string): void {
+export function saveMandateAiSummary(id: string, summary: string, health: string): void {
   const db = getDb();
   db.prepare(
-    `UPDATE projects SET ai_summary = ?, ai_health = ?, ai_summary_generated_at = ?, updated_at = ? WHERE id = ?`
+    `UPDATE mandates SET ai_summary = ?, ai_health = ?, ai_summary_generated_at = ?, updated_at = ? WHERE id = ?`
   ).run(summary, health, nowIso(), nowIso(), id);
 }
 
-export function deleteProject(id: string): void {
+export function deleteMandate(id: string): void {
   const db = getDb();
-  db.prepare(`DELETE FROM projects WHERE id = ?`).run(id);
-  logAudit("project.delete", "project", id);
+  db.prepare(`DELETE FROM mandates WHERE id = ?`).run(id);
+  logAudit("mandate.delete", "mandate", id);
 }
 
 // --- Knowledge items ----------------------------------------------------
 
-export function listItems(projectId: string): KnowledgeItem[] {
+export function listItems(mandateId: string): KnowledgeItem[] {
   const db = getDb();
   return toPlainArray<KnowledgeItem>(
-    db.prepare(`SELECT * FROM knowledge_items WHERE project_id = ? ORDER BY occurred_at DESC`).all(projectId)
+    db.prepare(`SELECT * FROM knowledge_items WHERE mandate_id = ? ORDER BY occurred_at DESC`).all(mandateId)
   );
 }
 
@@ -65,7 +65,7 @@ export function getItem(id: string): KnowledgeItem | undefined {
 }
 
 export function createItem(input: {
-  project_id: string;
+  mandate_id: string;
   type: ItemType;
   title: string;
   content: string;
@@ -81,11 +81,11 @@ export function createItem(input: {
   const id = newId("item");
   db.prepare(
     `INSERT INTO knowledge_items
-      (id, project_id, type, title, content, author, subject_email, source, occurred_at, legal_basis, retention_until, pii_redact, created_at)
+      (id, mandate_id, type, title, content, author, subject_email, source, occurred_at, legal_basis, retention_until, pii_redact, created_at)
      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
   ).run(
     id,
-    input.project_id,
+    input.mandate_id,
     input.type,
     input.title,
     input.content,
@@ -98,15 +98,15 @@ export function createItem(input: {
     input.pii_redact === false ? 0 : 1,
     nowIso()
   );
-  touchProject(input.project_id);
-  logAudit("item.create", "knowledge_item", id, { project_id: input.project_id, type: input.type });
+  touchMandate(input.mandate_id);
+  logAudit("item.create", "knowledge_item", id, { mandate_id: input.mandate_id, type: input.type });
   return getItem(id)!;
 }
 
 export function deleteItem(id: string): void {
   const item = getItem(id);
   getDb().prepare(`DELETE FROM knowledge_items WHERE id = ?`).run(id);
-  logAudit("item.delete", "knowledge_item", id, { project_id: item?.project_id });
+  logAudit("item.delete", "knowledge_item", id, { mandate_id: item?.mandate_id });
 }
 
 export function findItemsBySubject(email: string): KnowledgeItem[] {
@@ -125,7 +125,7 @@ export function listExpiredItems(): KnowledgeItem[] {
 // --- AI generations -------------------------------------------------------
 
 export function saveGeneration(input: {
-  project_id: string;
+  mandate_id: string;
   kind: AiGeneration["kind"];
   input_item_ids: string[];
   task: string;
@@ -136,11 +136,11 @@ export function saveGeneration(input: {
   const db = getDb();
   const id = newId("gen");
   db.prepare(
-    `INSERT INTO ai_generations (id, project_id, kind, input_item_ids, task, output, model, redaction_applied, created_at)
+    `INSERT INTO ai_generations (id, mandate_id, kind, input_item_ids, task, output, model, redaction_applied, created_at)
      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`
   ).run(
     id,
-    input.project_id,
+    input.mandate_id,
     input.kind,
     JSON.stringify(input.input_item_ids),
     input.task,
@@ -150,7 +150,7 @@ export function saveGeneration(input: {
     nowIso()
   );
   logAudit("ai.generate", "ai_generation", id, {
-    project_id: input.project_id,
+    mandate_id: input.mandate_id,
     kind: input.kind,
     model: input.model,
     input_item_count: input.input_item_ids.length,
@@ -159,15 +159,15 @@ export function saveGeneration(input: {
   return toPlain<AiGeneration>(db.prepare(`SELECT * FROM ai_generations WHERE id = ?`).get(id));
 }
 
-export function listGenerations(projectId: string, kind?: AiGeneration["kind"]): AiGeneration[] {
+export function listGenerations(mandateId: string, kind?: AiGeneration["kind"]): AiGeneration[] {
   const db = getDb();
   if (kind) {
     return toPlainArray<AiGeneration>(
-      db.prepare(`SELECT * FROM ai_generations WHERE project_id = ? AND kind = ? ORDER BY created_at DESC`).all(projectId, kind)
+      db.prepare(`SELECT * FROM ai_generations WHERE mandate_id = ? AND kind = ? ORDER BY created_at DESC`).all(mandateId, kind)
     );
   }
   return toPlainArray<AiGeneration>(
-    db.prepare(`SELECT * FROM ai_generations WHERE project_id = ? ORDER BY created_at DESC`).all(projectId)
+    db.prepare(`SELECT * FROM ai_generations WHERE mandate_id = ? ORDER BY created_at DESC`).all(mandateId)
   );
 }
 

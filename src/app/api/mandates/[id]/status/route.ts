@@ -1,20 +1,20 @@
 import { NextResponse } from "next/server";
-import { buildKnowledgeBaseBlock, generateProjectStatusSummary, currentModel } from "@/lib/ai";
+import { buildKnowledgeBaseBlock, generateMandateStatusSummary, currentModel } from "@/lib/ai";
 import { describeAiError } from "@/lib/ai-error";
-import { getProject, listItems, saveGeneration, saveProjectAiSummary } from "@/lib/repo";
+import { getMandate, listItems, saveGeneration, saveMandateAiSummary } from "@/lib/repo";
 
 export async function POST(_request: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const project = getProject(id);
-  if (!project) return NextResponse.json({ error: "project not found" }, { status: 404 });
+  const mandate = getMandate(id);
+  if (!mandate) return NextResponse.json({ error: "mandate not found" }, { status: 404 });
 
   try {
     const items = listItems(id);
     const kb = buildKnowledgeBaseBlock(items);
-    const { summary, health } = await generateProjectStatusSummary(kb, project.name);
-    saveProjectAiSummary(id, summary, health);
+    const { summary, health } = await generateMandateStatusSummary(kb, mandate.name);
+    saveMandateAiSummary(id, summary, health);
     saveGeneration({
-      project_id: id,
+      mandate_id: id,
       kind: "status_summary",
       input_item_ids: kb.itemIds,
       task: "status_summary",
