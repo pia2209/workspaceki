@@ -1,6 +1,9 @@
 {
   "env": {
-    "AWS_PROFILE": "borchers-kollegen"
+    "AWS_PROFILE": "borchers-kollegen",
+    "CLAUDE_CODE_USE_BEDROCK": "1",
+    "CLAUDE_CODE_USE_MANTLE": "1",
+    "AWS_REGION": "eu-central-1"
   },
   "hooks": {
     "SessionStart": [
