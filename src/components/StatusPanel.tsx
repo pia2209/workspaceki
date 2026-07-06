@@ -43,17 +43,17 @@ export function StatusPanel({ project, items }: { project: Project; items: Knowl
             disabled={loading}
             className="rounded-md bg-slate-900 px-3 py-1.5 text-sm font-medium text-white hover:bg-slate-700 disabled:opacity-50"
           >
-            {loading ? "Analysiere…" : "KI-Status aktualisieren"}
+            {loading ? "Analysiere…" : "Mandatsstatus aktualisieren"}
           </button>
         </div>
         {error && <p className="mt-2 text-xs text-red-600">{error}</p>}
         <p className="mt-3 whitespace-pre-wrap text-sm text-slate-700">
-          {project.ai_summary ?? "Noch keine KI-Statusanalyse erstellt. Klicke oben auf „KI-Status aktualisieren“, sobald Projektwissen vorhanden ist."}
+          {project.ai_summary ?? "Noch keine KI-Statusanalyse erstellt. Klicken Sie oben auf \"Mandatsstatus aktualisieren\", sobald Mandatswissen vorhanden ist."}
         </p>
       </div>
 
       <div>
-        <h3 className="mb-3 text-sm font-semibold text-slate-700">Zeitverlauf</h3>
+        <h3 className="mb-3 text-sm font-semibold text-slate-700">Mandatschronik</h3>
         {timeline.length === 0 ? (
           <p className="text-sm text-slate-400">Noch keine Einträge vorhanden.</p>
         ) : (

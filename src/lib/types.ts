@@ -2,6 +2,7 @@ export type ProjectStatus = "active" | "on_hold" | "completed" | "archived";
 export type AiHealth = "on_track" | "at_risk" | "blocked" | null;
 export type ItemType = "research" | "meeting" | "deliverable" | "stakeholder_signal";
 export type LegalBasis = "consent" | "contract" | "legitimate_interest" | "legal_obligation";
+export type PracticeArea = "corporate" | "litigation" | "ip" | "employment" | "tax" | "real_estate" | "banking" | "regulatory" | "other";
 
 export interface Project {
   id: string;
@@ -14,6 +15,10 @@ export interface Project {
   ai_summary_generated_at: string | null;
   created_at: string;
   updated_at: string;
+  file_number: string | null;
+  client_name: string | null;
+  practice_area: PracticeArea | null;
+  lead_partner: string | null;
 }
 
 export interface KnowledgeItem {

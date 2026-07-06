@@ -11,15 +11,16 @@ function getClient(): Anthropic {
   return client;
 }
 
-const SYSTEM_PROMPT = `Du bist der KI-Assistent eines adaptiven Unternehmens-Workspace. Deine Aufgabe ist es, aus Research-Notizen, Meeting-Protokollen, früheren Arbeitsergebnissen (Deliverables) und Stakeholder-Signalen eines Projekts entscheidungsreife Antworten und Dokumente zu erstellen.
+const SYSTEM_PROMPT = `Du bist der KI-Assistent einer Anwaltskanzlei im adaptiven Kanzlei-Workspace. Deine Aufgabe ist es, aus Recherchenotizen, Besprechungsprotokollen, früheren Arbeitsergebnissen (Schriftsätze, Verträge, Gutachten) und Mandanten-/Stakeholder-Signalen eines Mandats entscheidungsreife Analysen und Dokumente zu erstellen.
 
 Regeln:
-- Stütze dich ausschließlich auf den bereitgestellten Wissensbestand ("Projektwissen") unten. Erfinde keine Fakten, Zahlen, Namen oder Zusagen, die dort nicht enthalten sind.
-- Wenn Informationen fehlen oder widersprüchlich sind, benenne das explizit, anstatt zu spekulieren.
-- Referenziere Quellen mit Titel und Datum, wenn du dich auf ein bestimmtes Element im Projektwissen beziehst.
+- Stütze dich ausschließlich auf den bereitgestellten Wissensbestand ("Mandatswissen") unten. Erfinde keine Fakten, Rechtsprechung, Daten oder Zusagen, die dort nicht enthalten sind.
+- Wenn rechtliche Informationen fehlen oder widersprüchlich sind, benenne das explizit, anstatt zu spekulieren. Bei rechtlichen Fragestellungen weise auf offene Punkte hin, die noch recherchiert werden sollten.
+- Referenziere Quellen mit Titel und Datum, wenn du dich auf ein bestimmtes Element im Mandatswissen beziehst.
 - Antworte standardmäßig auf Deutsch, außer die Anfrage ist klar in einer anderen Sprache formuliert.
 - Manche personenbezogenen Daten wurden aus Datenschutzgründen bereits automatisch geschwärzt (z.B. "[REDACTED_EMAIL]"). Behandle das als normalen Platzhalter, weise aber nicht unnötig darauf hin.
-- Sei präzise und entscheidungsorientiert: Entscheider sollen aus deiner Antwort direkt den Status verstehen oder eine Entscheidung treffen können.`;
+- Sei präzise und entscheidungsorientiert: Partner und Mandanten sollen aus deiner Antwort direkt den Status verstehen oder eine fundierte Entscheidung treffen können.
+- Beachte die anwaltliche Sorgfaltspflicht: Kennzeichne Unsicherheiten deutlich und unterscheide zwischen gesicherten Fakten und eigenen Einschätzungen.`;
 
 export interface KbBuildResult {
   block: string;
@@ -52,7 +53,7 @@ export function buildKnowledgeBaseBlock(items: KnowledgeItem[]): KbBuildResult {
 function buildKbMessageBlock(kb: KbBuildResult): Anthropic.TextBlockParam {
   return {
     type: "text",
-    text: `Projektwissen (Research, Meetings, Deliverables, Stakeholder-Signale):\n\n${kb.block || "(noch keine Einträge vorhanden)"}`,
+    text: `Mandatswissen (Recherche, Besprechungen, Arbeitsergebnisse, Mandanten-Signale):\n\n${kb.block || "(noch keine Einträge vorhanden)"}`,
     cache_control: { type: "ephemeral" },
   };
 }
@@ -76,9 +77,12 @@ async function complete(kb: KbBuildResult, task: string, maxTokens: number, effo
 }
 
 export async function generateProjectStatusSummary(kb: KbBuildResult, projectName: string) {
-  const task = `Erstelle eine kompakte Status-Zusammenfassung für das Projekt "${projectName}" auf Basis des Projektwissens oben. Gib zurück:
+  const task = `Erstelle eine kompakte Status-Zusammenfassung für das Mandat "${projectName}" auf Basis des Mandatswissens oben. Gib zurück:
 1. Eine Zeile "STATUS: on_track" ODER "STATUS: at_risk" ODER "STATUS: blocked" (genau einer dieser drei Werte, nichts anderes in dieser Zeile).
-2. Danach 3-6 Sätze: aktueller Stand, letzte wichtige Entwicklungen, offene Risiken/Blocker, nächste Schritte.
+   - on_track: Mandat verläuft planmäßig, keine offenen kritischen Punkte
+   - at_risk: Es gibt Aspekte, die Aufmerksamkeit erfordern (Fristen, offene Rechtsfragen, Mandantenbedenken)
+   - blocked: Kritische Blocker, die eine Fortführung verhindern (fehlende Informationen, ausstehende Entscheidungen)
+2. Danach 3-6 Sätze: aktueller Verfahrensstand, letzte wichtige Entwicklungen, offene Rechtsfragen oder Risiken, nächste anstehende Schritte.
 Nutze KEINE Überschriften außer der STATUS-Zeile.`;
   const text = await complete(kb, task, 1024, "medium");
   const match = text.match(/STATUS:\s*(on_track|at_risk|blocked)/i);
@@ -88,12 +92,12 @@ Nutze KEINE Überschriften außer der STATUS-Zeile.`;
 }
 
 export async function generateDeliverable(kb: KbBuildResult, instructions: string): Promise<string> {
-  const task = `Erstelle auf Basis des Projektwissens oben ein entscheidungsreifes Deliverable gemäß folgender Anweisung:\n\n${instructions}\n\nFormatiere das Ergebnis in Markdown mit klaren Abschnitten. Wenn eine Entscheidung vorbereitet wird, schließe einen Abschnitt "Empfehlung" ab.`;
+  const task = `Erstelle auf Basis des Mandatswissens oben ein entscheidungsreifes Dokument gemäß folgender Anweisung:\n\n${instructions}\n\nFormatiere das Ergebnis in Markdown mit klaren Abschnitten. Bei rechtlichen Fragestellungen strukturiere nach: Sachverhalt, Rechtslage, Bewertung/Risiken, Handlungsempfehlung. Kennzeichne Unsicherheiten oder offene Punkte deutlich.`;
   return complete(kb, task, 8000, "high");
 }
 
 export async function askProjectQuestion(kb: KbBuildResult, question: string): Promise<string> {
-  const task = `Beantworte folgende Frage ausschließlich auf Basis des Projektwissens oben:\n\n${question}\n\nWenn die Antwort nicht aus dem Projektwissen hervorgeht, sage das explizit.`;
+  const task = `Beantworte folgende Frage ausschließlich auf Basis des Mandatswissens oben:\n\n${question}\n\nWenn die Antwort nicht aus dem Mandatswissen hervorgeht, sage das explizit und nenne ggf. welche Informationen noch benötigt werden.`;
   return complete(kb, task, 2048, "medium");
 }
 

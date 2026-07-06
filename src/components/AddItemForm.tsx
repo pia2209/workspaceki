@@ -5,10 +5,10 @@ import { useState } from "react";
 import type { ItemType } from "@/lib/types";
 
 const PLACEHOLDERS: Record<ItemType, { title: string; content: string }> = {
-  research: { title: "z.B. Wettbewerbsanalyse DACH-Markt", content: "Research-Notizen, Zusammenfassung, Links, Kernaussagen…" },
-  meeting: { title: "z.B. Kickoff mit Stakeholdern", content: "Meeting-Notizen oder Transkript einfügen…" },
-  deliverable: { title: "z.B. Business Case v1", content: "Inhalt des früheren Arbeitsergebnisses…" },
-  stakeholder_signal: { title: "z.B. Feedback von Kunde X", content: "Feedback, Anfrage oder Signal eines Stakeholders…" },
+  research: { title: "z.B. Rechtsprechungsanalyse BGH", content: "Rechercheergebnisse, Präzedenzfälle, rechtliche Einschätzung…" },
+  meeting: { title: "z.B. Mandantengespräch Strategieabstimmung", content: "Gesprächsnotizen, Protokoll oder Zusammenfassung…" },
+  deliverable: { title: "z.B. Vertragsentwurf v2.1", content: "Inhalt des Schriftsatzes, Vertrags oder Gutachtens…" },
+  stakeholder_signal: { title: "z.B. Rückmeldung Gegenseite", content: "Feedback, Anfrage oder Signal des Mandanten bzw. anderer Beteiligter…" },
 };
 
 export function AddItemForm({ projectId, type, onAdded }: { projectId: string; type: ItemType; onAdded?: () => void }) {

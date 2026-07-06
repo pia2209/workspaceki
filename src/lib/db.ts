@@ -19,7 +19,11 @@ CREATE TABLE IF NOT EXISTS projects (
   ai_summary TEXT,
   ai_summary_generated_at TEXT,
   created_at TEXT NOT NULL,
-  updated_at TEXT NOT NULL
+  updated_at TEXT NOT NULL,
+  file_number TEXT,
+  client_name TEXT,
+  practice_area TEXT,
+  lead_partner TEXT
 );
 
 CREATE TABLE IF NOT EXISTS knowledge_items (

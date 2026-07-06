@@ -9,6 +9,7 @@ import type {
   ItemType,
   LegalBasis,
   ProjectStatus,
+  PracticeArea,
 } from "./types";
 
 // --- Projects ---------------------------------------------------------
@@ -23,14 +24,36 @@ export function getProject(id: string): Project | undefined {
   return toPlain<Project | undefined>(db.prepare(`SELECT * FROM projects WHERE id = ?`).get(id));
 }
 
-export function createProject(input: { name: string; description: string; owner: string; status?: ProjectStatus }): Project {
+export function createProject(input: {
+  name: string;
+  description: string;
+  owner: string;
+  status?: ProjectStatus;
+  file_number?: string | null;
+  client_name?: string | null;
+  practice_area?: PracticeArea | null;
+  lead_partner?: string | null;
+}): Project {
   const db = getDb();
   const id = newId("proj");
   const now = nowIso();
   db.prepare(
-    `INSERT INTO projects (id, name, description, owner, status, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?)`
-  ).run(id, input.name, input.description, input.owner, input.status ?? "active", now, now);
-  logAudit("project.create", "project", id, { name: input.name });
+    `INSERT INTO projects (id, name, description, owner, status, file_number, client_name, practice_area, lead_partner, created_at, updated_at)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+  ).run(
+    id,
+    input.name,
+    input.description,
+    input.owner,
+    input.status ?? "active",
+    input.file_number ?? null,
+    input.client_name ?? null,
+    input.practice_area ?? null,
+    input.lead_partner ?? null,
+    now,
+    now
+  );
+  logAudit("project.create", "project", id, { name: input.name, file_number: input.file_number });
   return getProject(id)!;
 }
 

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import type { AiGeneration, KnowledgeItem, Project } from "@/lib/types";
-import { ProjectStatusBadge } from "@/components/StatusBadge";
+import { ProjectStatusBadge, PracticeAreaBadge } from "@/components/StatusBadge";
 import { StatusPanel } from "@/components/StatusPanel";
 import { AddItemForm } from "@/components/AddItemForm";
 import { ItemList } from "@/components/ItemList";
@@ -11,11 +11,11 @@ import { AskAiForm } from "@/components/AskAiForm";
 
 const TABS = [
   { key: "overview", label: "Übersicht" },
-  { key: "research", label: "Research" },
-  { key: "meeting", label: "Meetings" },
-  { key: "deliverable", label: "Deliverables" },
-  { key: "stakeholder_signal", label: "Stakeholder-Signale" },
-  { key: "ask", label: "Frage an die KI" },
+  { key: "research", label: "Recherche" },
+  { key: "meeting", label: "Besprechungen" },
+  { key: "deliverable", label: "Arbeitsergebnisse" },
+  { key: "stakeholder_signal", label: "Mandanten-Signale" },
+  { key: "ask", label: "KI-Assistent" },
 ] as const;
 
 type TabKey = (typeof TABS)[number]["key"];
@@ -41,9 +41,18 @@ export function ProjectHub({
         <div className="flex items-center gap-3">
           <h1 className="text-2xl font-semibold tracking-tight">{project.name}</h1>
           <ProjectStatusBadge status={project.status} />
+          {project.practice_area && <PracticeAreaBadge area={project.practice_area} />}
         </div>
+        {project.file_number && (
+          <p className="mt-1 text-sm text-slate-400 font-mono">Aktenzeichen: {project.file_number}</p>
+        )}
+        {project.client_name && (
+          <p className="mt-1 text-sm text-slate-600">Mandant: {project.client_name}</p>
+        )}
         {project.description && <p className="mt-1 text-sm text-slate-500">{project.description}</p>}
-        {project.owner && <p className="mt-1 text-xs text-slate-400">Verantwortlich: {project.owner}</p>}
+        {project.lead_partner && (
+          <p className="mt-1 text-xs text-slate-400">Federführender Partner: {project.lead_partner}</p>
+        )}
       </div>
 
       <div className="mb-6 flex flex-wrap gap-1 border-b border-slate-200">
@@ -64,6 +73,7 @@ export function ProjectHub({
 
       {tab === "research" && (
         <div className="space-y-4">
+          <p className="text-sm text-slate-500">Rechtliche Recherchen, Gutachten, Präzedenzfälle und externe Analysen.</p>
           <AddItemForm projectId={project.id} type="research" />
           <ItemList items={byType("research")} />
         </div>
@@ -71,6 +81,7 @@ export function ProjectHub({
 
       {tab === "meeting" && (
         <div className="space-y-4">
+          <p className="text-sm text-slate-500">Mandantengespräche, interne Abstimmungen und Verhandlungsprotokolle.</p>
           <AddItemForm projectId={project.id} type="meeting" />
           <ItemList items={byType("meeting")} />
         </div>
@@ -80,7 +91,8 @@ export function ProjectHub({
         <div className="space-y-8">
           <GenerateDeliverableForm projectId={project.id} generations={deliverableGenerations} />
           <div>
-            <h3 className="mb-3 text-sm font-semibold text-slate-700">Frühere Arbeitsergebnisse (Upload)</h3>
+            <h3 className="mb-3 text-sm font-semibold text-slate-700">Frühere Arbeitsergebnisse</h3>
+            <p className="mb-3 text-sm text-slate-500">Schriftsätze, Verträge, Gutachten und andere Dokumente, die bereits erstellt wurden.</p>
             <AddItemForm projectId={project.id} type="deliverable" />
             <div className="mt-3">
               <ItemList items={byType("deliverable")} />
@@ -91,6 +103,7 @@ export function ProjectHub({
 
       {tab === "stakeholder_signal" && (
         <div className="space-y-4">
+          <p className="text-sm text-slate-500">Feedback, Anfragen und Signale von Mandanten, Gegenseite oder anderen Beteiligten.</p>
           <AddItemForm projectId={project.id} type="stakeholder_signal" />
           <ItemList items={byType("stakeholder_signal")} />
         </div>

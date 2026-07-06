@@ -37,12 +37,13 @@ export function AskAiForm({ projectId, generations }: { projectId: string; gener
   return (
     <div className="space-y-6">
       <form onSubmit={submit} className="space-y-3 rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
-        <label className="block text-sm font-medium text-slate-700">Frage an das Projektwissen stellen</label>
+        <label className="block text-sm font-medium text-slate-700">Frage zum Mandat stellen</label>
+        <p className="text-xs text-slate-500">Der KI-Assistent beantwortet Fragen ausschließlich auf Basis der gesammelten Mandatsinformationen.</p>
         <textarea
           required
           value={question}
           onChange={(e) => setQuestion(e.target.value)}
-          placeholder="z.B. Was hat der Kunde beim letzten Meeting zur Preisstruktur gesagt?"
+          placeholder="z.B. Welche Bedenken hat der Mandant zur Haftungsklausel geäußert?"
           rows={2}
           className="w-full rounded-md border border-slate-300 px-3 py-1.5 text-sm"
         />
@@ -52,7 +53,7 @@ export function AskAiForm({ projectId, generations }: { projectId: string; gener
           disabled={loading}
           className="rounded-md bg-slate-900 px-3 py-1.5 text-sm font-medium text-white hover:bg-slate-700 disabled:opacity-50"
         >
-          {loading ? "Antworte…" : "Fragen"}
+          {loading ? "Recherchiere…" : "Frage stellen"}
         </button>
       </form>
 
