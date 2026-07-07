@@ -1,0 +1,20 @@
+{
+  "env": {
+    "AWS_PROFILE": "borchers-kollegen",
+    "CLAUDE_CODE_USE_BEDROCK": "1",
+    "CLAUDE_CODE_USE_MANTLE": "1",
+    "AWS_REGION": "eu-central-1"
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/session-start.sh"
+          }
+        ]
+      }
+    ]
+  }
+}
